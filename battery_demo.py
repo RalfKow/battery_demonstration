@@ -18,6 +18,7 @@ from matplotlib.widgets import Slider, Button
 from opcuaclient_subscription import opcua, toggle
 
 style.use('fivethirtyeight')
+
 # %% Establish OPC UA connection
 
 if __name__ == "__main__":
@@ -56,11 +57,27 @@ if __name__ == "__main__":
             ax[0].clear()
             ax[1].clear()
             
-            ax[0].plot(df_plot["temp_amb"])
-            ax[1].plot(df_plot["irrad"])
+            ax[0].plot(df_plot["temp_amb"], label='$T_{\mathrm{amb}}$ [°C]')
+            ax[0].set_xlim(df_plot.index.min(), df_plot.index.max())
+            ax[0].set_ylabel('$T_{\mathrm{amb}}$ [°C]', fontsize=11.)
+            ax[0].tick_params(axis='both', which='major', labelsize=11, length=0, labelbottom=False)
+            ax[0].legend(fontsize=11., loc='upper left')
+            
+            ax[1].plot(df_plot["irrad"], color='orange', label=r'$\dot{Q}_{\mathrm{solar}}$ $\left[\frac{\mathrm{W}}{\mathrm{m}^2}\right]$')
+            ax[1].set_xlim(df_plot.index.min(), df_plot.index.max())
+            ax[1].set_ylabel(r'$\dot{Q}_{\mathrm{solar}}$ $\left[\frac{\mathrm{W}}{\mathrm{m}^2}\right]$', fontsize=11.)
+            ax[1].tick_params(axis='both', which='major', labelsize=11, length=0, labelbottom=True)
+            ax[1].legend(fontsize=11., loc='upper left')
+            
+            fig.align_ylabels()
+            plt.tight_layout()
+
         
         ani = animation.FuncAnimation(fig, animate, interval=1000)
+        figManager = plt.get_current_fig_manager()
+        figManager.window.showMaximized()
         plt.show()
+        
         # %% Create GUI for battery handling
 
         # fig, ax = plt.subplots()
